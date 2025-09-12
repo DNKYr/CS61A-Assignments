@@ -25,6 +25,12 @@ def num_eights(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    elif n % 10 == 8:
+        return 1 + num_eights(n // 10)
+    else:
+        return num_eights(n // 10)
 
 
 def digit_distance(n):
@@ -47,6 +53,10 @@ def digit_distance(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n < 10:
+        return 0
+    else:
+        return abs(n % 10 - (n % 100 // 10)) + digit_distance(n // 10)
 
 
 def interleaved_sum(n, odd_func, even_func):
@@ -72,6 +82,16 @@ def interleaved_sum(n, odd_func, even_func):
     """
     "*** YOUR CODE HERE ***"
 
+    def sum_k(k):
+        if k == n:
+            return odd_func(k)
+        elif k > n:
+            return 0
+        else:
+            return odd_func(k) + even_func(k + 1) + sum_k(k + 2)
+
+    return sum_k(1)
+
 
 def next_smaller_dollar(bill):
     """Returns the next smaller bill in order."""
@@ -85,6 +105,7 @@ def next_smaller_dollar(bill):
         return 5
     elif bill == 5:
         return 1
+
 
 def count_dollars(total):
     """Return the number of ways to make change.
@@ -108,6 +129,22 @@ def count_dollars(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def count_dollars_combination(total, max_bill):
+        if total == 0 or max_bill == 1:
+            return 1
+        elif total < 0:
+            return 0
+        else:
+            count_with_maxBill = count_dollars_combination(
+                total - max_bill, max_bill
+            )
+            count_without_maxBill = count_dollars_combination(
+                total, next_smaller_dollar(max_bill)
+            )
+            return count_with_maxBill + count_without_maxBill
+
+    return count_dollars_combination(total, 100)
+
 
 def next_larger_dollar(bill):
     """Returns the next larger bill in order."""
@@ -121,6 +158,7 @@ def next_larger_dollar(bill):
         return 50
     elif bill == 50:
         return 100
+
 
 def count_dollars_upward(total):
     """Return the number of ways to make change using bills.
@@ -144,10 +182,25 @@ def count_dollars_upward(total):
     """
     "*** YOUR CODE HERE ***"
 
+    def count_dollar_up_combination(total, bill):
+        if total < 0 or bill == None:
+            return 0
+        elif total == 0:
+            return 1
+        else:
+            with_bill = count_dollar_up_combination(total - bill, bill)
+            without_bill = count_dollar_up_combination(
+                total, next_larger_dollar(bill)
+            )
+            return with_bill + without_bill
+
+    return count_dollar_up_combination(total, 1)
+
 
 def print_move(origin, destination):
     """Print instructions to move a disk."""
     print("Move the top disk from rod", origin, "to rod", destination)
+
 
 def move_stack(n, start, end):
     """Print the moves required to move n disks on the start pole to the end
@@ -180,7 +233,8 @@ def move_stack(n, start, end):
     "*** YOUR CODE HERE ***"
 
 
-from operator import sub, mul
+from operator import mul, sub
+
 
 def make_anonymous_factorial():
     """Return the value of an expression that computes factorial.
@@ -193,5 +247,4 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
-
+    return "YOUR_EXPRESSION_HERE"
